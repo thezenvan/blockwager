@@ -1,8 +1,8 @@
 import { useContractReader } from "eth-hooks";
 import { ethers } from "ethers";
 import React from "react";
-import { Link } from "react-router-dom";
-import WagerGrid from "../components/WagerGrid";
+import { Link, useParams } from "react-router-dom";
+import { Avatar, Card, Row, Col, Typography, Image } from "antd";
 
 /**
  * web3 props can be passed from '../App.jsx' into your local view component for use
@@ -11,21 +11,29 @@ import WagerGrid from "../components/WagerGrid";
  * @returns react component
  **/
 function WagerDetail({ readContracts }) {
-  // you can also use hooks locally in your component of choice
-  // in this case, let's keep track of 'purpose' variable from our contract
-  const wagers = useContractReader(readContracts, "BlockWager", "getWagers");
-  console.log("🤏 wagers",wagers && wagers[1][0].toNumber())
+  let { wagerId } = useParams();
+  const { Meta } = Card;
+  const { Title, Text } = Typography;
+  const wager = useContractReader(readContracts, "BlockWager", "getWager", wagerId);
+  console.log("🤏 wager", wager && wager);
 
   return (
-    <div>
-      <div style={{ border: "1px solid #cccccc", padding: 16, width: 400, margin: "auto", marginTop: 64 }}>
-        *********** WAGER DETAIL ************
-        <WagerGrid wagers={wagers} />
-      </div>
-      <div style={{ margin: 32 }}>
-        <span style={{ marginRight: 8 }}>✏️</span>
-          Check out our discord
-      </div>
+    <div style={{ padding: 2, width: 1400, margin: "auto", marginTop: 64 }}>
+      <Row>
+        <Col span={8}>
+          <Image width={400} src={wager ? "https://gateway.pinata.cloud/ipfs/" + wager[5] : ""} />
+        </Col>
+        <Col span={16}>
+          <Row>
+            <Col>
+              <Title>{wager && wager[2]}</Title>
+            </Col>
+          </Row>
+          <Row>
+            <Col>{wager && wager[3]}</Col>
+          </Row>
+        </Col>
+      </Row>
     </div>
   );
 }
