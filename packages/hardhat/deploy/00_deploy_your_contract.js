@@ -1,4 +1,5 @@
 // deploy/00_deploy_your_contract.js
+const { LoremIpsum } = require("lorem-ipsum");
 
 const { ethers } = require("hardhat");
 
@@ -24,6 +25,17 @@ const createTestWagers = async (BlockWager) => {
   );
 };
 
+const lorem = new LoremIpsum({
+  sentencesPerParagraph: {
+    max: 8,
+    min: 4
+  },
+  wordsPerSentence: {
+    max: 16,
+    min: 4
+  }
+});
+
 module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
@@ -45,9 +57,9 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   try {
     //createTestWagers(BlockWager);
     await BlockWager.createWager(
-      Math.random().toString(36).slice(2),
-      Math.random().toString(36).slice(2),
-      Math.random().toString(36).slice(2),
+      lorem.generateWords(3),
+      lorem.generateParagraphs(2),
+      lorem.generateParagraphs(2),
       "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/11.png",
       1625097600
     );

@@ -3,6 +3,7 @@ import { Typography } from "antd";
 import { Avatar, Card } from "antd";
 import { EditOutlined, EllipsisOutlined, SettingOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
+import * as helpers from "../helpers/helpers";
 
 const { Title, Text } = Typography;
 
@@ -19,7 +20,7 @@ export default function WagerCard({ wager }) {
         <Meta
           avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
           title={wager && wager[2]}
-          description={wager && wager[3]}
+          description={wager && helpers.truncateString(wager[3], 100)}
         />
       </Card>
     </Link>

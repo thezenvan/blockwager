@@ -2,7 +2,7 @@ import { useContractReader } from "eth-hooks";
 import { ethers } from "ethers";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
-import { Avatar, Card, Row, Col, Typography, Image } from "antd";
+import { Avatar, Card, Row, Col, Typography, Image, Space } from "antd";
 
 /**
  * web3 props can be passed from '../App.jsx' into your local view component for use
@@ -19,6 +19,7 @@ function WagerDetail({ readContracts }) {
 
   return (
     <div style={{ padding: 2, width: 1400, margin: "auto", marginTop: 64 }}>
+      <Space direction="vertical" align="left" size="middle" style={{ display: 'flex' }}>
       <Row>
         <Col span={8}>
           <Image width={400} src={wager ? "https://gateway.pinata.cloud/ipfs/" + wager[5] : ""} />
@@ -34,6 +35,7 @@ function WagerDetail({ readContracts }) {
           </Row>
         </Col>
       </Row>
+      </Space>
     </div>
   );
 }
