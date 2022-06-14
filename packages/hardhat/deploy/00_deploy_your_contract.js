@@ -12,12 +12,25 @@ const localChainId = "31337";
 //     }, ms)
 //   );
 
+const createTestWagers = async (BlockWager) => {
+  console.log("test");
+
+  await BlockWager.createWager(
+    Math.random().toString(36).slice(2),
+    "test description",
+    "test logic",
+    "test banner",
+    1625097600
+  );
+};
+
 module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
   const chainId = await getChainId();
+  const someWagers = ["a", "b", "c", "d"];
 
-  await deploy("YourContract", {
+  await deploy("BlockWager", {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
     from: deployer,
     // args: [ "Hello", ethers.utils.parseEther("1.5") ],
@@ -26,9 +39,52 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   });
 
   // Getting a previously deployed contract
-  const YourContract = await ethers.getContract("YourContract", deployer);
-  /*  await YourContract.setPurpose("Hello");
-  
+  const BlockWager = await ethers.getContract("BlockWager", deployer);
+
+  // create a few wagers
+  try {
+    //createTestWagers(BlockWager);
+    await BlockWager.createWager(
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+      "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/11.png",
+      1625097600
+    );
+    await BlockWager.createWager(
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+      "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/12.png",
+      1623097322
+    );
+    await BlockWager.createWager(
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+      "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/9.png",
+      1625097600
+    );
+    await BlockWager.createWager(
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+      "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/8.png",
+      1625097600
+    );
+    await BlockWager.createWager(
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+      Math.random().toString(36).slice(2),
+      "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/7.png",
+      1625097600
+    );
+    console.log("fsfd"+BlockWager);
+  } catch (e) {
+    console.error(e);
+  }
+
+  /*
     To take ownership of yourContract using the ownable library uncomment next line and add the 
     address you want to be the owner. 
     // await yourContract.transferOwnership(YOUR_ADDRESS_HERE);
@@ -76,4 +132,4 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   //   console.error(error);
   // }
 };
-module.exports.tags = ["YourContract"];
+module.exports.tags = ["BlockWager"];
