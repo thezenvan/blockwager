@@ -23,25 +23,15 @@ const lorem = new LoremIpsum({
   },
 });
 
-const createTestWagers = async (BlockWager) => {
-  console.log("test");
-  try {
-    await BlockWager.createWager(
-      lorem.generateWords(3),
-      lorem.generateParagraphs(2),
-      lorem.generateParagraphs(2),
-      "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/11.png",
-      1625097600,
-      ["Yes", "No"]
-    );
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
+module.exports = async ({
+  getNamedAccounts,
+  getUnnamedAccounts,
+  deployments,
+  getChainId,
+}) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
+  const { users } = await getUnnamedAccounts();
   const chainId = await getChainId();
 
   await deploy("BlockWager", {
@@ -55,10 +45,27 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   // Getting a previously deployed contract
   const BlockWager = await ethers.getContract("BlockWager", deployer);
 
-  // create a few wagers
+  const createTestWagers = async () => {
+    console.log("test");
+    try {
+      await BlockWager.createWager(
+        lorem.generateWords(3),
+        lorem.generateParagraphs(2),
+        lorem.generateParagraphs(2),
+        "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/11.png",
+        1625097600,
+        ["Yes", "No"]
+      );
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  console.log("Creating Wagers");
+  // createTestWagers(BlockWager);
+
+  // create a few wagers (do this with a for loop)
   try {
-    console.log("Creating Wagers");
-    //createTestWagers(BlockWager);
     await BlockWager.createWager(
       lorem.generateWords(3),
       lorem.generateParagraphs(2),
@@ -99,6 +106,12 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
       1625097600,
       ["Yes", "No"]
     );
+
+    // cast some votes
+    console.log("Casting votes...");
+    await BlockWager.createVote(0, 1, {
+      value: ethers.utils.parseUnits("0.001", "ether"),
+    });
   } catch (e) {
     console.error(e);
   }

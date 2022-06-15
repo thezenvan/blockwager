@@ -147,22 +147,25 @@ contract BlockWager {
   }
 
   /**
-  * @notice create a Vote and adds to the appropriate Wager votes array
+  * @notice creates a Vote and adds to the appropriate Wager votes array and transfers the wagerAmount to the contract
   * @param _wagerId the Wager ID
+  * @param _vote the user's vote on the Wager
   * @return Wager the Wager struct
   */
   function createVote(
     uint256 _wagerId,
-    uint256 _vote,
-    uint256 _wagerAmount,
-    uint256 _timeMultiplier
-  ) public returns(Wager memory) {
+    uint256 _vote
+    //uint256 _wagerAmount
+  ) public payable returns(Wager memory) {
+    require(_wagerId >= 0, 'wager ID required');
+    require(_vote >= 0, 'vote required');
+    //require(_wagerAmount != msg.value, 'wager amount required');
     Vote memory newVote;
     newVote.voteWallet = msg.sender;
     newVote.vote = _vote;
     newVote.voteDate = block.timestamp;
-    newVote.wagerAmount = _wagerAmount;
-    newVote.timeMultiplier = _timeMultiplier;
+    newVote.wagerAmount = msg.value;
+    newVote.timeMultiplier = 1;   // calculate from difference between Wager endDate and block.timestamp
     wagers[_wagerId].votes.push(newVote);
     return wagers[_wagerId];
   }
