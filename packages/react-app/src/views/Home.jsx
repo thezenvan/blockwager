@@ -12,7 +12,7 @@ function Home({ yourLocalBalance, readContracts }) {
   // you can also use hooks locally in your component of choice
   // in this case, let's keep track of 'purpose' variable from our contract
   const wagers = useContractReader(readContracts, "BlockWager", "getWagers");
-  console.log("🤏 wagers",wagers && wagers[1][0].toNumber())
+  console.log("🤏 wagers", wagers && wagers);
 
   return (
     <div>
@@ -21,7 +21,7 @@ function Home({ yourLocalBalance, readContracts }) {
       </div>
       <div style={{ margin: 32 }}>
         <span style={{ marginRight: 8 }}>✏️</span>
-          Check out our discord
+        Check out our discord
       </div>
     </div>
   );

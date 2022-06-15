@@ -1,0 +1,1 @@
+export const DECISION_LOGIC_TEXT = "This is how the host will determine the outcome, and the sources (if applicable) they will use. In case of decision disputes, a BlockWager moderator will use only this field to arbitrate. The host cannot edit this.";

@@ -1,6 +1,5 @@
 // deploy/00_deploy_your_contract.js
 const { LoremIpsum } = require("lorem-ipsum");
-
 const { ethers } = require("hardhat");
 
 const localChainId = "31337";
@@ -13,34 +12,37 @@ const localChainId = "31337";
 //     }, ms)
 //   );
 
-const createTestWagers = async (BlockWager) => {
-  console.log("test");
-
-  await BlockWager.createWager(
-    Math.random().toString(36).slice(2),
-    "test description",
-    "test logic",
-    "test banner",
-    1625097600
-  );
-};
-
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
     max: 8,
-    min: 4
+    min: 4,
   },
   wordsPerSentence: {
     max: 16,
-    min: 4
-  }
+    min: 4,
+  },
 });
+
+const createTestWagers = async (BlockWager) => {
+  console.log("test");
+  try {
+    await BlockWager.createWager(
+      lorem.generateWords(3),
+      lorem.generateParagraphs(2),
+      lorem.generateParagraphs(2),
+      "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/11.png",
+      1625097600,
+      ["Yes", "No"]
+    );
+  } catch (e) {
+    console.error(e);
+  }
+};
 
 module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
   const { deploy } = deployments;
   const { deployer } = await getNamedAccounts();
   const chainId = await getChainId();
-  const someWagers = ["a", "b", "c", "d"];
 
   await deploy("BlockWager", {
     // Learn more about args here: https://www.npmjs.com/package/hardhat-deploy#deploymentsdeploy
@@ -55,43 +57,48 @@ module.exports = async ({ getNamedAccounts, deployments, getChainId }) => {
 
   // create a few wagers
   try {
+    console.log("Creating Wagers");
     //createTestWagers(BlockWager);
     await BlockWager.createWager(
       lorem.generateWords(3),
       lorem.generateParagraphs(2),
       lorem.generateParagraphs(2),
       "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/11.png",
-      1625097600
+      1625097600,
+      ["Yes", "No"]
     );
     await BlockWager.createWager(
-      Math.random().toString(36).slice(2),
-      Math.random().toString(36).slice(2),
-      Math.random().toString(36).slice(2),
+      lorem.generateWords(3),
+      lorem.generateParagraphs(2),
+      lorem.generateParagraphs(2),
       "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/12.png",
-      1623097322
+      1623097322,
+      ["Yes", "No"]
     );
     await BlockWager.createWager(
-      Math.random().toString(36).slice(2),
-      Math.random().toString(36).slice(2),
-      Math.random().toString(36).slice(2),
+      lorem.generateWords(3),
+      lorem.generateParagraphs(2),
+      lorem.generateParagraphs(2),
       "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/9.png",
-      1625097600
+      1625097600,
+      ["Yes", "No"]
     );
     await BlockWager.createWager(
-      Math.random().toString(36).slice(2),
-      Math.random().toString(36).slice(2),
-      Math.random().toString(36).slice(2),
+      lorem.generateWords(3),
+      lorem.generateParagraphs(2),
+      lorem.generateParagraphs(2),
       "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/8.png",
-      1625097600
+      1625097600,
+      ["Yes", "No"]
     );
     await BlockWager.createWager(
-      Math.random().toString(36).slice(2),
-      Math.random().toString(36).slice(2),
-      Math.random().toString(36).slice(2),
+      lorem.generateWords(3),
+      lorem.generateParagraphs(2),
+      lorem.generateParagraphs(2),
       "QmNMjWwk87fyRtVCwhQ38fAPohFeY6NTKMKHws6oqbQQjs/7.png",
-      1625097600
+      1625097600,
+      ["Yes", "No"]
     );
-    console.log("fsfd"+BlockWager);
   } catch (e) {
     console.error(e);
   }

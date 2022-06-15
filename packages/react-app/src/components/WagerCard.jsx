@@ -14,13 +14,13 @@ export default function WagerCard({ wager }) {
     <Link to={wager ? "/wager/"+wager[0].toNumber() : ""}>
       <Card
         style={{ width: 300 }}
-        cover={<img alt="rwwe" src={wager ? "https://gateway.pinata.cloud/ipfs/"+wager[5] : ""} />}
+        cover={<img alt="rwwe" src={wager ? "https://gateway.pinata.cloud/ipfs/"+wager[4] : ""} />}
         actions={[<SettingOutlined key="setting" />, <EditOutlined key="edit" />, <EllipsisOutlined key="ellipsis" />]}
       >
         <Meta
           avatar={<Avatar src="https://joeschmoe.io/api/v1/random" />}
-          title={wager && wager[2]}
-          description={wager && helpers.truncateString(wager[3], 100)}
+          title={wager && wager[1]}
+          description={wager && helpers.truncateString(wager[2], 100)}
         />
       </Card>
     </Link>

@@ -21,7 +21,6 @@ contract BlockWager {
 
   struct Wager {
     uint256 wagerId;
-    address[] wallets;
     string title;
     string description;
     string decisionLogic;
@@ -30,6 +29,16 @@ contract BlockWager {
     uint256 endDate;
     WagerStatus status;
     Category category;
+    string[] options;
+    Vote[] votes;
+  }
+
+  struct Vote {
+    address voteWallet;
+    uint256 vote;
+    uint256 voteDate;
+    uint256 wagerAmount;
+    uint256 timeMultiplier;
   }
 
   struct Category {
@@ -40,15 +49,15 @@ contract BlockWager {
 
   struct User {
     uint256 userId;
+    address userWallet;
     string name;
     uint256 level;
     uint256 country;
   }
 
-  mapping (uint256 => Wager) public wagers;
+  Wager[] wagers;
   uint256 public totalWagers = 0;
   uint256 public totalCategories = 0;
-  mapping (address => uint256[]) public wagersByWallet;
 
   using SafeMath for uint256; //outlines use of SafeMath for uint256 variables
 
@@ -82,28 +91,26 @@ contract BlockWager {
     string memory _description,
     string memory _decisionLogic,
     string memory _banner,
-    uint256 _endDate
+    uint256 _endDate,
+    string[] memory options
   ) external returns(bool status) {
     require(bytes(_title).length > 0, 'Title required');
     require(bytes(_description).length > 0, 'Description required');
     require(bytes(_decisionLogic).length > 0, 'Decision Logic required');
     require(bytes(_banner).length > 0, 'Banner required');
-    address[] memory newWallets;
-    Wager memory newWager = Wager(
-      totalWagers,
-      newWallets,
-      _title,
-      _description,
-      _decisionLogic,
-      _banner,
-      block.timestamp,
-      _endDate,
-      WagerStatus.Open,
-      Category(totalCategories, "test", "test cat")
-    );
-    wagers[totalWagers] = newWager;
+    require(options.length > 0, 'Options required');
+    Wager storage newWager = wagers.push();
+    newWager.wagerId = totalWagers;
+    newWager.title = _title;
+    newWager.description = _description;
+    newWager.decisionLogic = _decisionLogic;
+    newWager.banner = _banner;
+    newWager.created = block.timestamp;
+    newWager.endDate = _endDate;
+    newWager.status = WagerStatus.Open;
+    newWager.category = Category(totalCategories, "test", "test cat");
+    newWager.options = options;
     totalWagers++;
-
     return true;
   }
 
@@ -112,19 +119,51 @@ contract BlockWager {
   * @param _wagerId the Wager ID
   * @return Wager the Wager struct
   */
-  function getWager(uint256 _wagerId) public view returns(Wager memory) {
+  function getWager(
+    uint256 _wagerId
+  ) public view returns(Wager memory) {
     return wagers[_wagerId];
   }
 
   /**
-  * @notice returns the lsat 10 wagers in an array to be featured on the homepage
+  * @notice returns the last 10 wagers in an array to be featured on the homepage
   * @return newWagers an array of Wager
   */
   function getWagers() public view returns(Wager[] memory) {
     Wager[] memory newWagers = new Wager[](totalWagers);
     for (uint i = 0; i < totalWagers; i++) {
-        newWagers[i] = wagers[i];
+      // only return useful stuff
+      newWagers[i].wagerId = wagers[i].wagerId;
+      newWagers[i].title = wagers[i].title;
+      newWagers[i].description = wagers[i].description;
+      newWagers[i].decisionLogic = wagers[i].decisionLogic;
+      newWagers[i].banner = wagers[i].banner;
+      newWagers[i].created = wagers[i].created;
+      newWagers[i].endDate = wagers[i].endDate;
+      newWagers[i].status = wagers[i].status;
+      newWagers[i].category = wagers[i].category;
     }
     return newWagers;
+  }
+
+  /**
+  * @notice create a Vote and adds to the appropriate Wager votes array
+  * @param _wagerId the Wager ID
+  * @return Wager the Wager struct
+  */
+  function createVote(
+    uint256 _wagerId,
+    uint256 _vote,
+    uint256 _wagerAmount,
+    uint256 _timeMultiplier
+  ) public returns(Wager memory) {
+    Vote memory newVote;
+    newVote.voteWallet = msg.sender;
+    newVote.vote = _vote;
+    newVote.voteDate = block.timestamp;
+    newVote.wagerAmount = _wagerAmount;
+    newVote.timeMultiplier = _timeMultiplier;
+    wagers[_wagerId].votes.push(newVote);
+    return wagers[_wagerId];
   }
 }
